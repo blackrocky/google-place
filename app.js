@@ -2,7 +2,7 @@ var googlePlace = require('./modules/google-place.js');
 
 function checkUsage() {
     return new Promise((resolve, reject) => {
-         if (process.argv.length < 3) {
+         if (process.argv.length < 4) {
             reject('Usage: node ' + process.argv[1] + ' API-KEY QUERY');
         } else {
             resolve();
