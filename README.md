@@ -1,2 +1,3 @@
 # google-place
-Google Place playground
+Google Place
+

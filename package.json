@@ -1,0 +1,31 @@
+{
+  "name": "google-place",
+  "version": "1.0.0",
+  "description": "Google Place playground",
+  "main": "app.js",
+  "scripts": {
+    "test": "./node_modules/mocha/bin/mocha test/google-place-test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/blackrocky/google-place.git"
+  },
+  "keywords": [
+    "google",
+    "place",
+    "places",
+    "json"
+  ],
+  "author": "blackrocky",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/blackrocky/google-place/issues"
+  },
+  "homepage": "https://github.com/blackrocky/google-place#readme",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-as-promised": "^6.0.0",
+    "mocha": "^3.2.0",
+    "sinon": "^1.17.7"
+  }
+}
