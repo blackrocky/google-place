@@ -20,8 +20,8 @@ exports.search = function(apiKey, query) {
                     reject(places);
                 }
             });
-        }).on('error', function (e) {
-            console.log("Got error: " + e.message);
+        }).on('error', function (err) {
+            console.log("Got error: " + err.message);
             reject(err);
         });
    });

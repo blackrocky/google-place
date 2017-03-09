@@ -13,7 +13,7 @@ describe('Google Place', () => {
 		this.request = sinon.stub(https, 'get');
 	});
 
-    it('should return the same value as place search result', () => {
+    it('should return status OK', () => {
         var expected = { status: 'OK' };
 
         var httpsResponse = new PassThrough();
@@ -27,6 +27,33 @@ describe('Google Place', () => {
 
         var result = googlePlace.search('randomAPI', 'randomQuery');
         return expect(result).to.eventually.deep.equal(expected);
+    });
+
+    it('should reject with invalid request status', () => {
+        var expected = { status: 'INVALID_REQUEST' };
+
+        var httpsResponse = new PassThrough();
+        httpsResponse.write(JSON.stringify(expected));
+        httpsResponse.end();
+
+        var request = new PassThrough();
+
+        this.request.callsArgWith(1, httpsResponse)
+                    .returns(request);
+
+        var result = googlePlace.search('randomAPI', 'randomQuery');
+        return expect(result).to.be.rejectedWith(expected);
+    });
+
+    it('should reject with error', () => {
+        var expectedError = new Error('randomError');
+
+        var request = new PassThrough();
+        this.request.returns(request);
+
+        var result = googlePlace.search('randomAPI', 'randomQuery');
+        request.emit('error', expectedError);
+        return expect(result).to.be.rejectedWith(expectedError);
     });
 
     afterEach(() => {
