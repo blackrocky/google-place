@@ -25,8 +25,8 @@ describe('Google Place', () => {
         this.request.callsArgWith(1, httpsResponse)
                     .returns(request);
 
-        var result = googlePlace.search('a', 'b');
-        expect(result).to.eventually.deep.equal(expected);
+        var result = googlePlace.search('randomAPI', 'randomQuery');
+        return expect(result).to.eventually.deep.equal(expected);
     });
 
     afterEach(() => {
