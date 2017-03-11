@@ -1,8 +1,8 @@
 var https = require('https');
+var fs = require('fs');
 
-exports.search = function(apiKey, query) {
+module.exports.search = (apiKey, query) => {
     return new Promise((resolve, reject) => {
-        console.log('searching with apiKey ' + apiKey + ' and query ' + query);
         var url = "https://maps.googleapis.com/maps/api/place/textsearch/json?query=" + query + "&key=" + apiKey;
         https.get(url, function (response) {
             var body = '';
@@ -16,13 +16,40 @@ exports.search = function(apiKey, query) {
                 if (places.status == "OK") {
                     resolve(places);
                 } else {
-                    console.log("Query is invalid: ", query);
+                    console.error("Query is invalid: ", query);
                     reject(places);
                 }
             });
         }).on('error', function (err) {
-            console.log("Got error: " + err.message);
+            console.error("Got error: " + err.message);
             reject(err);
         });
    });
+}
+
+module.exports.constructSearchQuery = (jsonData) => {
+    return new Promise((resolve, reject) => {
+        var queryString = jsonData.name + ', ' + jsonData.suburb + ', ' + jsonData.state + ', Australia';
+        resolve(encodeURI(queryString));
+    });
+}
+
+module.exports.read = (fileName) => {
+    return new Promise((resolve, reject) => {
+        fs.readFile(fileName, (err, data) => {
+            if (err) reject(err);
+            resolve(JSON.parse(data));
+        });
+    });
+}
+
+module.exports.processAll = (apiKey, fileName) => {
+    return module.exports.read(fileName)
+                .then((jsonData) => {
+                    return module.exports.constructSearchQuery(jsonData)
+                })
+                .then((searchQuery) => {
+                    return module.exports.search(apiKey, searchQuery);
+                })
+                ;
 }

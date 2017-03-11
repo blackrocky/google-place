@@ -4,7 +4,7 @@
   "description": "Google Place playground",
   "main": "app.js",
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha test/google-place-test.js"
+    "test": "./node_modules/mocha/bin/mocha test/"
   },
   "repository": {
     "type": "git",
