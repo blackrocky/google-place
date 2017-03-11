@@ -13,7 +13,7 @@ describe('Google Place', () => {
 		this.request = sinon.stub(https, 'get');
 	});
 
-    it('should return status OK', () => {
+    it('should search and return status OK', () => {
         var expected = { status: 'OK' };
 
         var httpsResponse = new PassThrough();
@@ -79,26 +79,27 @@ describe('Google Place', () => {
     });
 
     it('should process all', () => {
-        var readStub = sinon.stub(googlePlace, 'read').resolves([{"name": "Guzzle","suburb": "Sydney","state": "NSW"}]);
-        var constructSearchQueryStub = sinon.stub(googlePlace, 'constructSearchQuery').resolves('randomPlace,%20Sydney,%20NSW,%20Australia');
-        var searchStub = sinon.stub(googlePlace, 'search').resolves({ status : "OK" });
+        var expected = { status: 'OK' };
 
-        googlePlace.processAll('randomApiKey', 'randomFileName');
+        var httpsResponse = new PassThrough();
+        httpsResponse.write(JSON.stringify(expected));
+        httpsResponse.end();
 
-        return Promise.all([
-                readStub()
-                    .then((jsonDataList) =>
-                        expect(jsonDataList).to.deep.equal([{"name": "Guzzle","suburb": "Sydney","state": "NSW"}])
-                    ),
-                constructSearchQueryStub()
-                    .then((queryString) =>
-                        expect(queryString).to.equal('randomPlace,%20Sydney,%20NSW,%20Australia')
-                     ),
-                searchStub()
-                    .then((places) =>
-                        expect(places).to.deep.equal({ status : "OK" })
-                    )
-            ]);
+        var request = new PassThrough();
+
+        this.request.callsArgWith(1, httpsResponse).returns(request);
+
+        var readSpy = sinon.spy(googlePlace, 'read');
+        var constructSearchQuerySpy = sinon.spy(googlePlace, 'constructSearchQuery');
+        var searchSpy = sinon.spy(googlePlace, 'search');
+
+        return googlePlace.processAll('randomApiKey', './test/sample-places.json')
+            .then((result) => {
+                expect(readSpy.calledOnce).to.be.true;
+                expect(constructSearchQuerySpy.calledTwice).to.be.true;
+                expect(searchSpy.calledOnce).to.be.true;
+                expect(result).to.deep.equal({ status : 'OK' });
+            });
     });
 
     afterEach(() => {
