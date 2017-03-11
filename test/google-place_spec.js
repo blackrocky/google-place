@@ -79,7 +79,7 @@ describe('Google Place', () => {
     });
 
     it('should process all', () => {
-        var readStub = sinon.stub(googlePlace, 'read').resolves({"name": "Guzzle","suburb": "Sydney","state": "NSW"});
+        var readStub = sinon.stub(googlePlace, 'read').resolves([{"name": "Guzzle","suburb": "Sydney","state": "NSW"}]);
         var constructSearchQueryStub = sinon.stub(googlePlace, 'constructSearchQuery').resolves('randomPlace,%20Sydney,%20NSW,%20Australia');
         var searchStub = sinon.stub(googlePlace, 'search').resolves({ status : "OK" });
 
@@ -87,8 +87,8 @@ describe('Google Place', () => {
 
         return Promise.all([
                 readStub()
-                    .then((jsonData) =>
-                        expect(jsonData).to.deep.equal({"name": "Guzzle","suburb": "Sydney","state": "NSW"})
+                    .then((jsonDataList) =>
+                        expect(jsonDataList).to.deep.equal([{"name": "Guzzle","suburb": "Sydney","state": "NSW"}])
                     ),
                 constructSearchQueryStub()
                     .then((queryString) =>

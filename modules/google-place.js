@@ -45,11 +45,10 @@ module.exports.read = (fileName) => {
 
 module.exports.processAll = (apiKey, fileName) => {
     return module.exports.read(fileName)
-                .then((jsonData) => {
-                    return module.exports.constructSearchQuery(jsonData)
+                .then((jsonDataList) => {
+                    return Promise.all(jsonDataList.map(module.exports.constructSearchQuery));
                 })
                 .then((searchQuery) => {
                     return module.exports.search(apiKey, searchQuery);
-                })
-                ;
+                });
 }
