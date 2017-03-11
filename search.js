@@ -16,5 +16,5 @@ checkUsage()
     .then(() => {
         return googlePlace.search(apiKey, query);
     })
-    .then(result => console.log(result))
+    .then(result => console.log(JSON.stringify(result, null, 2)))
     .catch(err => console.log(err));

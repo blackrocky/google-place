@@ -105,6 +105,8 @@ describe('Google Place', () => {
                 expect(searchSpy.calledTwice).to.be.true;
                 expect(searchSpy.calledWith('randomApiKey', 'Guzzle,%20Sydney,%20NSW,%20Australia')).to.be.true;
                 expect(searchSpy.calledWith('randomApiKey', 'Nook,%20Sydney,%20NSW,%20Australia')).to.be.true;
+
+                expect(result).to.deep.equal([{status : 'OK'}, {status : 'OK'}])
             });
     });
 

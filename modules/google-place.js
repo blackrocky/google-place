@@ -46,11 +46,22 @@ module.exports.read = (fileName) => {
 module.exports.processAll = (apiKey, fileName) => {
     return module.exports.read(fileName)
                 .then((jsonDataList) => {
-                    return jsonDataList.forEach((jsonData) => {
-                        return module.exports.constructSearchQuery(jsonData)
+                    var promises = [];
+                    jsonDataList.forEach((jsonData) => {
+                        promises.push(
+                            module.exports.constructSearchQuery(jsonData)
                                 .then((searchQuery) => {
-                                    return module.exports.search(apiKey, searchQuery);
-                                });
-                    });
-                })
+                                    return module.exports.search(apiKey, searchQuery)
+                                        .then((result) => {
+                                            return result;
+                                        })
+                                })
+                        );
+                    })
+
+                    return Promise.all(promises)
+                        .then((responses) => {
+                            return responses;
+                        })
+                });
 }
