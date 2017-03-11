@@ -96,9 +96,15 @@ describe('Google Place', () => {
         return googlePlace.processAll('randomApiKey', './test/sample-places.json')
             .then((result) => {
                 expect(readSpy.calledOnce).to.be.true;
+                expect(readSpy.calledWith('./test/sample-places.json')).to.be.true;
+
                 expect(constructSearchQuerySpy.calledTwice).to.be.true;
-                expect(searchSpy.calledOnce).to.be.true;
-                expect(result).to.deep.equal({ status : 'OK' });
+                expect(constructSearchQuerySpy.calledWith({"name": "Guzzle","suburb": "Sydney","state": "NSW"})).to.be.true;
+                expect(constructSearchQuerySpy.calledWith({"name": "Nook","suburb": "Sydney","state": "NSW"})).to.be.true;
+
+                expect(searchSpy.calledTwice).to.be.true;
+                expect(searchSpy.calledWith('randomApiKey', 'Guzzle,%20Sydney,%20NSW,%20Australia')).to.be.true;
+                expect(searchSpy.calledWith('randomApiKey', 'Nook,%20Sydney,%20NSW,%20Australia')).to.be.true;
             });
     });
 
